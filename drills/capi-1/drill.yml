@@ -1,0 +1,40 @@
+setup_cmd: ./setup
+teardown_cmd: ./teardown
+
+required_env_vars:
+  - BOSH_ENVIRONMENT
+  - BOSH_CLIENT
+  - BOSH_CLIENT_SECRET
+  - BOSH_LITE_DOMAIN
+
+summary: |
+  This exercise will start by deploying a broken Cloud Foundry to your bosh-lite.
+  After the deployment is complete you will receive further instruction.
+
+  Note: This exercise requires the following:
+    * The `bosh` Goland cli installed
+    * A bosh-lite with no existing cf deployment
+
+prompt: |
+  After the most recent CF deployment I can't push apps anymore.
+  It says "Error restarting application: StagingError" when I try to push.
+  Any ideas?
+
+  Use the CF CLI, `bosh ssh`, and UNIX commands to figure out what is going on.
+  The cf API is `api.$BOSH_LITE_DOMAIN` and the login is admin/admin.
+
+solution: |
+  The Operator accidentally swapped out the CC Uploader
+  TLS cert for the statsdinjector cert. This caused
+  all droplet uploads to fail as the communication
+  between CC Uploader and CC was busted.
+
+  To check your answer, you could run:
+  `openssl verify -verbose -CAfile cc-ca.pem cc-uploader.crt`
+  This will tell you that CC Uploader TLS cert was not
+  signed for the CC CA.
+
+hints:
+  - Try running `cf push` and look at the logs during the push. How far does the process get?
+  - The `push` logs show that Diego successfully finished staging but was unable to upload the droplet. Which components are responsible for uploading the droplet?
+  - The cc-uploader job uploads takes the droplet from Diego and uploads it to the api job. Does the cc-uploader job have any interesting logs?

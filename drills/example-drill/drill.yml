@@ -1,0 +1,19 @@
+setup_cmd: ./setup
+teardown_cmd: ./teardown
+
+required_env_vars:
+  - MY_ENV_VAR
+
+summary: |
+  This is an example drill. More coming soon!
+
+prompt: |
+  This is where you would introduce the prompt to the user.
+
+solution: |
+  This is where you would show the solution and ways to check your solution is correct.
+
+hints:
+  - This is a vague hint.
+  - This is a little more specific.
+  - This tells the user exactly where to look.

@@ -1,0 +1,32 @@
+#!/bin/bash
+
+set -eu
+
+echo "Grabbing cf-deployment..."
+git clone https://github.com/cloudfoundry/cf-deployment.git ./cf-deployment
+
+cat << EOF > ./mystery-ops-file.yml
+- type: replace
+  path: /name
+  value: fire-drill-cloudfoundry-capi-1
+
+# "accidentally" swap out CC TLS certs for loggregator certs
+- type: replace
+  path: /instance_groups/name=cc-bridge/jobs/name=cc_uploader/properties/capi/cc_uploader/cc/client_cert
+  value: "((loggregator_tls_statsdinjector.certificate))"
+- type: replace
+  path: /instance_groups/name=cc-bridge/jobs/name=cc_uploader/properties/capi/cc_uploader/cc/client_key
+  value: "((loggregator_tls_statsdinjector.private_key))"
+
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/diego?/temporary_cc_uploader_mtls?
+  value: true
+EOF
+
+echo -e "Deploying a broken CF to the bosh-lite..."
+bosh -n -d fire-drill-cloudfoundry-capi-1 deploy ./cf-deployment/cf-deployment.yml \
+	-o ./cf-deployment/operations/bosh-lite.yml \
+	-v system_domain="${BOSH_LITE_DOMAIN}" \
+        -v cf_admin_password="admin" \
+	-o ./mystery-ops-file.yml \
+	--vars-store ./deployment-vars.yml

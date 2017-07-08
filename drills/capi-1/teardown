@@ -1,0 +1,6 @@
+#!/bin/bash
+
+set -u
+
+echo "Deleting deployment..."
+bosh -n delete-deployment -d fire-drill-cloudfoundry-capi-1

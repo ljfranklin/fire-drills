@@ -1,0 +1,6 @@
+#!/bin/bash
+
+set -u
+
+echo "Cleaning stuff up..."
+sleep 5
