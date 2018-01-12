@@ -12,15 +12,11 @@ cat << EOF > ./mystery-ops-file.yml
 
 # "accidentally" swap out CC TLS certs for loggregator certs
 - type: replace
-  path: /instance_groups/name=cc-bridge/jobs/name=cc_uploader/properties/capi/cc_uploader/cc/client_cert
+  path: /instance_groups/name=api/jobs/name=cc_uploader/properties/capi/cc_uploader/cc/client_cert
   value: "((loggregator_tls_statsdinjector.certificate))"
 - type: replace
-  path: /instance_groups/name=cc-bridge/jobs/name=cc_uploader/properties/capi/cc_uploader/cc/client_key
+  path: /instance_groups/name=api/jobs/name=cc_uploader/properties/capi/cc_uploader/cc/client_key
   value: "((loggregator_tls_statsdinjector.private_key))"
-
-- type: replace
-  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/diego?/temporary_cc_uploader_mtls?
-  value: true
 EOF
 
 echo -e "Deploying a broken CF to the bosh-lite..."

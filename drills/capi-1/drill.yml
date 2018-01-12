@@ -11,8 +11,9 @@ summary: |
   This exercise will start by deploying a broken Cloud Foundry to your bosh-lite.
   After the deployment is complete you will receive further instruction.
 
-  Note: This exercise requires the following:
-    * The `bosh` Goland cli installed
+  *** REQUIREMENTS ***
+  This exercise requires the following:
+    * The `bosh` Golang cli installed
     * A bosh-lite with no existing cf deployment
 
 prompt: |
